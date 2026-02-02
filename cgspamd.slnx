@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="cgspamd.api/cgspamd.api.csproj" />
+  <Project Path="cgspamd.core/cgspamd.core.csproj" />
+  <Project Path="cgspamd.helper/cgspamd.helper.csproj" />
+  <Project Path="cgspamd.tests/cgspamd.tests.csproj" />
+</Solution>

@@ -6,8 +6,10 @@ using cgspamd.core.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Runtime.CompilerServices;
 using System.Text;
 
+[assembly: InternalsVisibleTo("cgspamd.tests")]
 namespace cgspamd.api
 {
     public class Program

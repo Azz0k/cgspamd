@@ -33,7 +33,6 @@ namespace cgspamd.core.Application
         }
         public async Task<int> AddAsync(int userId, AddFilterRuleRequest request)
         {
-
             if (!isAddRuleRequestValid(request))
             {
                 return -1;

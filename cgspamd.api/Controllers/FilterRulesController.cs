@@ -2,12 +2,11 @@
 using cgspamd.core.Models.APIModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using static cgspamd.core.Utils.Utils;
 
 namespace cgspamd.api.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class FilterRulesController : ControllerBase
@@ -17,31 +16,26 @@ namespace cgspamd.api.Controllers
         {
             this.application = application;
         }
-        // GET: api/<ValuesController>
+        // GET: api/FilterRules
         [HttpGet]
         public async Task<IEnumerable<FilterRuleDTO>> Get()
         {
             return await application.GetAllRecordsAsync();
         }
-
-
-
-        // POST api/<ValuesController>
+        // POST api/FilterRules
         [HttpPost]
-        public async Task<int> Post([FromBody] AddFilterRuleRequest request, HttpContext context)
+        public async Task<int> Post([FromBody] AddFilterRuleRequest request)
         {
-            return await application.AddAsync(0,request);
+            return await application.AddAsync(GetId(HttpContext), request);
         }
-
-        // PUT api/<ValuesController>
+        // PUT api/FilterRules
         [HttpPut]
         public async Task<StatusCodeResult> Put([FromBody] UpdateFilterRuleRequest request)
         {
-            int code = await application.UpdateAsync(0,request);
+            int code = await application.UpdateAsync(GetId(HttpContext), request);
             return StatusCode(code);
         }
-
-        // DELETE api/<ValuesController>/5
+        // DELETE api/FilterRules/5
         [HttpDelete("{id}")]
         public async Task<StatusCodeResult> Delete(int id)
         {

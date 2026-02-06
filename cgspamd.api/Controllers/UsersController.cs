@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace cgspamd.api.Controllers 
 { 
-    //[Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "AdminOnly")]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase

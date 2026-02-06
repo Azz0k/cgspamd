@@ -40,6 +40,9 @@ namespace cgspamd.tests
                 var scopedServices = scope.ServiceProvider;
                 var db = scopedServices.GetRequiredService<StoreDbContext>();
                 db.Database.Migrate();
+                var authApp = scopedServices.GetRequiredService<UserAuthenticationApplication>();
+                string token = authApp.GenerateJwt(new cgspamd.core.Models.User() { FullName = "test", UserName = "test", Id = 1, IsAdmin = true , Hash = ""});
+                _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
             }
         }
         private string GenerateRandomStr()
@@ -96,9 +99,9 @@ namespace cgspamd.tests
             response = await _client.DeleteAsync($"{apiUri}/{idToDelete}");
             var code = response.StatusCode;
             Assert.Equal(HttpStatusCode.NotFound, code);
-            var domainsAfterDelete = await GetAsync();
-            Assert.NotNull(domainsAfterDelete);
-            Assert.DoesNotContain(domainsAfterDelete, e => e.Id == idToDelete);
+            var usersAfterDelete = await GetAsync();
+            Assert.NotNull(usersAfterDelete);
+            Assert.DoesNotContain(usersAfterDelete, e => e.Id == idToDelete);
         }
         [Fact]
         public async Task UsersApi_PUT_ShouldWorkCorrectly()

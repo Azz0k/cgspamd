@@ -43,7 +43,7 @@ namespace cgspamd.tests
                 var db = scopedServices.GetRequiredService<StoreDbContext>();
                 db.Database.Migrate();
                 var userApp = scopedServices.GetRequiredService<UsersApplication>();
-                await userApp.AddAsync(new AddUserRequest() { FullName= "test",UserName="test",IsAdmin=true,Enabled=true, Password = "test"});
+                await userApp.AddAsync(new AddUserRequest() { FullName= "test",UserName="test",IsAdmin=true,Enabled=true, Password = "test1234"});
                 var authApp = scopedServices.GetRequiredService<UserAuthenticationApplication>();
                 string token = authApp.GenerateJwt(new cgspamd.core.Models.User() { FullName = "test", UserName = "test", Id = 1, IsAdmin = true, Hash = "" });
                 _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
@@ -73,6 +73,8 @@ namespace cgspamd.tests
             string? createdId = await PostToFilterRulesAPI();
             Assert.NotNull(createdId);
             Assert.NotEmpty(createdId);
+            int id = Int32.Parse(createdId);
+            Assert.NotEqual(-1, id);
         }
 
         [Fact]

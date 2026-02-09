@@ -43,7 +43,7 @@ namespace cgspamd.core.Utils
         }
         public static int GetId(HttpContext context)
         {
-            return int.Parse(context.User.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value);
+            return int.Parse(context.User.Claims.First(x => x.Type == "Id").Value);
         }
     }
 }

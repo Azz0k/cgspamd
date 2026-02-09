@@ -38,11 +38,10 @@ namespace cgspamd.api.Application
         internal string GenerateJwt(User user)
         {
             var claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.Name, user.UserName));
-            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
-            claims.Add(new Claim(ClaimTypes.GivenName, user.FullName));
-            if (user.IsAdmin)
-                claims.Add(new Claim("IsAdmin", "true"));
+            claims.Add(new Claim("UserName", user.UserName));
+            claims.Add(new Claim("Id", user.Id.ToString()));
+            claims.Add(new Claim("FullName", user.FullName));
+            claims.Add(new Claim("IsAdmin", user.IsAdmin.ToString()));
             var jwt = new JwtSecurityToken(
                 claims: claims,
                 expires: DateTime.Now.AddDays(30),

@@ -26,5 +26,22 @@ namespace cgspamd.tests
         {
             Assert.Equal(expected, isAddUserRequestValid(request));
         }
+        [Theory]
+        [InlineData(0, true)]
+        [InlineData(1, true)]
+        [InlineData(2, true)]
+        [InlineData(3, true)]
+        [InlineData(4, true)]
+        [InlineData(5, true)]
+        [InlineData(6, true)]
+        [InlineData(7, false)]
+        [InlineData(-1, false)]
+        [InlineData(int.MinValue, false)]
+        [InlineData(int.MaxValue, false)]
+        public void isAddRuleRequestValid_WithVariousInputs_ReturnsExpected(int value, bool expected)
+        {
+            Assert.Equal(expected, isAddRuleRequestValid(new AddFilterRuleRequest() { Comment ="", Value = "", Type = value}));
+        }
+
     }
 }

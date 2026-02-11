@@ -1,9 +1,4 @@
 import * as React from "react"
-import {
-  MailX,
-  UserCog
-} from "lucide-react"
-
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
 import {
@@ -14,30 +9,6 @@ import {
 import {rootStore} from "@/store/RootStore.ts";
 import {observer} from "mobx-react";
 
-const data = {
-  navAdmin: [
-    {
-      title: "Правила фильтрации",
-      url: "/",
-      icon: MailX,
-      isActive: true,
-    },
-    {
-      title: "Пользователи",
-      url: "/users",
-      icon: UserCog,
-    }
-  ],
-  navMain: [
-    {
-      title: "Правила фильтрации",
-      url: "/",
-      icon: MailX,
-      isActive: true,
-    },
-  ],
-}
-
 export const AppSidebar = observer(({ ...props }: React.ComponentProps<typeof Sidebar>)=> {
   return (
     <Sidebar
@@ -45,7 +16,7 @@ export const AppSidebar = observer(({ ...props }: React.ComponentProps<typeof Si
       {...props}
     >
       <SidebarContent>
-        <NavMain items={rootStore.CurrentUser?.IsAdmin?data.navAdmin:data.navMain} />
+        <NavMain items={rootStore.mainMenu} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser/>

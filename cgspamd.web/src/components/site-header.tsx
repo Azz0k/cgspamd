@@ -13,8 +13,10 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { useSidebar } from "@/components/ui/sidebar"
 import {ThemeSwitcher} from "@/components/theme-switcher.tsx";
+import {observer} from "mobx-react";
+import {rootStore} from "@/store/RootStore.ts";
 
-export function SiteHeader() {
+export const SiteHeader = observer(()=> {
   const { toggleSidebar } = useSidebar()
 
   return (
@@ -32,11 +34,11 @@ export function SiteHeader() {
         <Breadcrumb className="hidden sm:block">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">Build Your Application</BreadcrumbLink>
+              <BreadcrumbLink href={rootStore.pathName}>cgspamd</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+              <BreadcrumbPage>{rootStore.mainMenuTitle}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -47,4 +49,4 @@ export function SiteHeader() {
       </div>
     </header>
   )
-}
+});

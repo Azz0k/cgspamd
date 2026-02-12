@@ -1,7 +1,7 @@
 import './App.css'
 import {configure} from "mobx";
 import {observer} from "mobx-react";
-import {rootStore} from "@/store/RootStore.ts";
+import {rootStore} from "@/store/root-store.ts";
 import {LoginPage} from "@/pages/LoginPage.tsx";
 import {DefaultPage} from "@/pages/DefaultPage.tsx";
 import {ThemeProvider} from "@/components/theme-provider.tsx";

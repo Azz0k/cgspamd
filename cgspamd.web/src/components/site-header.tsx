@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator"
 import { useSidebar } from "@/components/ui/sidebar"
 import {ThemeSwitcher} from "@/components/theme-switcher.tsx";
 import {observer} from "mobx-react";
-import {rootStore} from "@/store/RootStore.ts";
+import {rootStore} from "@/store/root-store.ts";
 
 export const SiteHeader = observer(()=> {
   const { toggleSidebar } = useSidebar()

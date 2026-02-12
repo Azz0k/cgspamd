@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input"
 import * as React from "react";
 import {type RefObject, useEffect, useRef } from "react";
 import {observer} from "mobx-react";
-import { rootStore } from "@/store/RootStore.ts";
+import { rootStore } from "@/store/root-store.ts";
 
 export const LoginForm = observer(({className,...props}: React.ComponentProps<"div">)=>{
   const inputRef:RefObject<HTMLInputElement| null>  = useRef(null);

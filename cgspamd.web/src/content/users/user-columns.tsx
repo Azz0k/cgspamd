@@ -1,14 +1,8 @@
-import  { type ColumnDef } from "@tanstack/react-table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {Button} from "@/components/ui/button.tsx";
-import { MoreHorizontal } from "lucide-react"
+import '@tanstack/react-table';
+import {type ColumnDef} from "@tanstack/react-table";
+import {BadgeCheck, BadgeXIcon,} from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import {UserActions} from "@/content/users/user-actions.tsx";
 
 export type User = {
   id: number;
@@ -18,46 +12,58 @@ export type User = {
   enabled: boolean;
 };
 
+
 export const userColumns:ColumnDef<User>[] = [
   {
     accessorKey: "userName",
     header: "Логин",
+    meta: {headerClassName: "w-2/7", },
   },
   {
     accessorKey: "fullName",
     header: "ФИО",
+    meta: {headerClassName: "w-2/7", },
   },
   {
-    accessorKey: "isAdmin",
     header: "Администратор",
+    meta: {headerClassName: "w-1/7", },
+    cell: ({row}) => {
+      const user = row.original;
+      return (
+        <>
+          <Badge variant="secondary">
+            {user.isAdmin?<BadgeCheck data-icon="inline-start"/>:<BadgeXIcon data-icon="inline-start"/>}
+            {user.isAdmin? "Да":"Нет"}
+          </Badge>
+        </>
+      );
+    }
   },
   {
-    accessorKey: "enabled",
     header: "Включен",
+    meta: {headerClassName: "w-1/7",  },
+    cell: ({row}) => {
+      const user = row.original;
+      return (
+        <>
+          <Badge variant="secondary">
+            {user.enabled?<BadgeCheck data-icon="inline-start"/>:<BadgeXIcon data-icon="inline-start"/>}
+            {user.enabled? "Да":"Нет"}
+          </Badge>
+        </>
+      );
+    }
   },
   {
     id: "actions",
+    header: "Действия",
     cell: ({ row }) => {
-      const user = row.original
+      const user = row.original;
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Действия</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Добавить пользователя</DropdownMenuItem>
-            <DropdownMenuItem>Редактировать пользователя</DropdownMenuItem>
-            <DropdownMenuItem>Удалить пользователя</DropdownMenuItem>
-            <DropdownMenuItem>Сменить пароль пользователю</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <UserActions id={user.id}/>
       )
     },
+    meta: {headerClassName: "w-1/7", }
   },
 ];
 

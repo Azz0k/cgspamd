@@ -1,4 +1,4 @@
-import {rootStore} from "../store/RootStore.ts";
+import {rootStore} from "../store/root-store.ts";
 
 export const FetchData = (url:string) => {
   return fetch(url, {

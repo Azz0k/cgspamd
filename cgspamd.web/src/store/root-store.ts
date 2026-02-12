@@ -25,6 +25,7 @@ class RootStore {
       this.pathName = evt.toLocation.pathname;
     });
   }
+  searchValue: string = "";
   pathName!: string;
   CurrentUser:JWTPayloadConverted | null = null;
   themeSwitchValue = true;
@@ -39,6 +40,9 @@ class RootStore {
   }
   get mainMenuTitle() {
     return this.mainMenu.find(e=>e.url===this.pathName)?.title;
+  }
+  handleChangeSearchValue = (e: React.ChangeEvent<HTMLInputElement>)=> {
+    this.searchValue = e.target.value;
   }
   handleCheckTheme = (value:boolean) => {
     this.themeSwitchValue = value;

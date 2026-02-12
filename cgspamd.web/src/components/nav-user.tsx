@@ -18,7 +18,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import {observer} from "mobx-react";
-import { rootStore } from "@/store/RootStore.ts";
+import { rootStore } from "@/store/root-store.ts";
 
 export const NavUser = observer(() => {
   const { isMobile } = useSidebar()

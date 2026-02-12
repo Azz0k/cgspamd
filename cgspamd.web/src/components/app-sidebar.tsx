@@ -6,7 +6,7 @@ import {
   SidebarContent,
   SidebarFooter,
 } from "@/components/ui/sidebar"
-import {rootStore} from "@/store/RootStore.ts";
+import {rootStore} from "@/store/root-store.ts";
 import {observer} from "mobx-react";
 
 export const AppSidebar = observer(({ ...props }: React.ComponentProps<typeof Sidebar>)=> {

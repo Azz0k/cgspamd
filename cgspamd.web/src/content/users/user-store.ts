@@ -17,11 +17,11 @@ class UserStore {
   constructor(){
     makeAutoObservable(this);
   }
+
   usersData: Users = [];
   loading: boolean = false;
   error: string | null = null;
   userMutationStore = userMutationStore;
-
 
   handleCancelAction = () =>{
     this.userMutationStore.clear();

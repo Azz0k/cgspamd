@@ -1,5 +1,5 @@
 import {createRootRoute, createRoute, createRouter} from "@tanstack/react-router";
-import {FilterRulesContent} from "@/components/filter-rules-content.tsx";
+import {FilterRulesContent} from "@/content/filter-rules/filter-rules-content.tsx";
 import {UsersContent} from "@/content/users/users-content.tsx";
 
 const rootRoute = createRootRoute();

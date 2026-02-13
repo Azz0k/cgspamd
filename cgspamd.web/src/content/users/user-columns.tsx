@@ -2,7 +2,7 @@ import '@tanstack/react-table';
 import {type ColumnDef} from "@tanstack/react-table";
 import {BadgeCheck, BadgeXIcon,} from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import {UserActions} from "@/content/users/user-actions.tsx";
+import {UserActions} from "@/content/users/components/user-actions.tsx";
 
 export type User = {
   id: number;
@@ -60,7 +60,7 @@ export const userColumns:ColumnDef<User>[] = [
     cell: ({ row }) => {
       const user = row.original;
       return (
-        <UserActions id={user.id}/>
+        <UserActions user={user}/>
       )
     },
     meta: {headerClassName: "w-1/7", }

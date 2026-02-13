@@ -14,36 +14,36 @@ import React from "react";
 import {Spinner} from "@/components/ui/spinner.tsx";
 
 
-type DeleteConfirmationDialogProps = {
+type ActionConfirmationDialogProps = {
   onCancel: ()=>void;
   onConfirm: () => Promise<boolean>;
   error: string | null;
   menuItemText :string;
   loading: boolean;
+  description:string;
+  title:string;
+  children?: React.ReactNode;
 }
-export const DeleteConfirmationDialog = ({
-                                           onCancel,
-                                           onConfirm,
-                                           error,
-                                           menuItemText,
+export const ActionConfirmationDialog = ({
+  onCancel,
+  onConfirm,
+  error,
+  menuItemText,
   loading,
-}:DeleteConfirmationDialogProps)=> {
+  description,
+  title,
+  children,
+                                         }:ActionConfirmationDialogProps)=> {
   const [open, setOpen] = React.useState(false);
-  const [disabled,setDisabled] = React.useState(false);
-  const description = "Это действие нельзя отменить.";
-  const title = "Вы уверены?";
   const errorTitle = "Ошибка";
-
   const handleOpenChange = (value:boolean) => {
 
     setOpen(value);
     if (!value) onCancel();
   }
   const handleSubmit = () =>{
-    setDisabled(true);
     onConfirm().then(result => {
       if (result) {
-        setDisabled(false);
         setOpen(false);
         onCancel();
       }
@@ -66,22 +66,16 @@ export const DeleteConfirmationDialog = ({
               {error===null?description:error}
             </DialogDescription>
           </DialogHeader>
+          {children}
           <DialogFooter>
-            {loading ? (
-              <Button
-                type="submit"
-                disabled={disabled}
-              >
-                <Spinner data-icon="inline-start" />
-                Да
-              </Button>
-            ):(
-              <Button
-                type="submit"
-                disabled={disabled}
-                onClick={handleSubmit}
-              >Да</Button>
-            )}
+            <Button
+              type="submit"
+              disabled={loading}
+              onClick={handleSubmit}
+            >
+              {loading && <Spinner data-icon="inline-start" />}
+              Да
+            </Button>
             <DialogClose asChild>
               <Button variant="outline">Нет</Button>
             </DialogClose>

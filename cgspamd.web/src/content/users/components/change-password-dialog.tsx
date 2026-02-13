@@ -2,7 +2,7 @@ import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {observer} from "mobx-react";
-import {userState} from "@/content/users/user-state.ts";
+import {userStore} from "@/content/users/user-store.ts";
 
 export const ChangePasswordDialog = observer(() => {
   return (
@@ -12,8 +12,8 @@ export const ChangePasswordDialog = observer(() => {
         <Input
           id="password-1"
           type="password"
-          value={userState.passwordChangeValues.password1}
-          onChange={userState.handlePassword1ChangeValue}
+          value={userStore.userMutationStore.passwordChangeValues.password1}
+          onChange={userStore.userMutationStore.handlePassword1ChangeValue}
           />
       </Field>
       <Field>
@@ -21,8 +21,8 @@ export const ChangePasswordDialog = observer(() => {
         <Input
           id="password-2"
           type="password"
-          value={userState.passwordChangeValues.password2}
-          onChange={userState.handlePassword2ChangeValue}
+          value={userStore.userMutationStore.passwordChangeValues.password2}
+          onChange={userStore.userMutationStore.handlePassword2ChangeValue}
         />
       </Field>
     </FieldGroup>

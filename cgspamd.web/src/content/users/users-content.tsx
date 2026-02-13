@@ -1,7 +1,7 @@
 import {userColumns} from "@/content/users/user-columns.tsx";
 import {DataTable} from "@/components/data-table.tsx";
 import {observer} from "mobx-react";
-import {userState} from "@/content/users/user-state.ts";
+import {userStore} from "@/content/users/user-store.ts";
 import {rootStore} from "@/store/root-store.ts";
 import {useEffect} from "react";
 import {reaction} from "mobx";
@@ -12,7 +12,7 @@ export const UsersContent = observer(() => {
       ()=>rootStore.isLoggedIn,
       ()=>{
         if (rootStore.isLoggedIn){
-          userState.LoadAllUsers().then();
+          userStore.LoadAllUsers().then();
         }
       },
       { fireImmediately: true }
@@ -20,7 +20,7 @@ export const UsersContent = observer(() => {
   },[]);
   return (
     <section className="container mx-auto py-10">
-      <DataTable columns={userColumns} data={userState.usersData}/>
+      <DataTable columns={userColumns} data={userStore.usersData}/>
     </section>
   );
 });

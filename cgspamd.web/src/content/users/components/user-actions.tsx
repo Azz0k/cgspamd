@@ -2,16 +2,16 @@ import {observer} from "mobx-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {MoreHorizontal} from "lucide-react";
 import React from "react";
-import {userState} from "@/content/users/user-state.ts";
+import {userStore} from "@/content/users/user-store.ts";
 import {ActionConfirmationDialog} from "@/components/action-confirmation-dialog.tsx";
 import type {User} from "@/content/users/user-columns.tsx";
 import {ChangePasswordDialog} from "@/content/users/components/change-password-dialog.tsx";
+import {EditUserDialog} from "@/content/users/components/edit-user-dialog.tsx";
 
 type UserActionsProps = {
   user:User;
@@ -19,7 +19,7 @@ type UserActionsProps = {
 export const UserActions = observer(({user}:UserActionsProps)=>{
   const [open, SetOpen] = React.useState(false);
   const cancelAction  = ()=>{
-    userState.handleCancelAction();
+    userStore.handleCancelAction();
     SetOpen(false);
   };
   return (
@@ -31,24 +31,44 @@ export const UserActions = observer(({user}:UserActionsProps)=>{
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem>Добавить пользователя</DropdownMenuItem>
-        <DropdownMenuItem>Редактировать пользователя</DropdownMenuItem>
         <ActionConfirmationDialog
           onCancel={cancelAction}
-          onConfirm={()=>userState.handleDeleteUser(user.id)}
-          error={userState.error}
+          onConfirm={()=>userStore.handleAddUser()}
+          error={userStore.error}
+          menuItemText="Добавить пользователя"
+          loading={userStore.loading}
+          description="Введите данные нового пользователя"
+          title={`Новый пользователь`}
+        >
+          <EditUserDialog />
+        </ActionConfirmationDialog>
+        <ActionConfirmationDialog
+          onCancel={cancelAction}
+          onConfirm={()=>userStore.handleUpdateUser(user.id)}
+          error={userStore.error}
+          menuItemText="Редактировать пользователя"
+          loading={userStore.loading}
+          description="Введите новые данные пользователя"
+          title={`Редактируем ${user.userName}`}
+        >
+          <EditUserDialog user={user}/>
+        </ActionConfirmationDialog>
+        <ActionConfirmationDialog
+          onCancel={cancelAction}
+          onConfirm={()=>userStore.handleDeleteUser(user.id)}
+          error={userStore.error}
           menuItemText="Удалить пользователя"
-          loading={userState.loading}
+          loading={userStore.loading}
           description="Это действие нельзя отменить."
           title="Вы уверены?"
         >
         </ActionConfirmationDialog>
         <ActionConfirmationDialog
           onCancel={cancelAction}
-          onConfirm={()=>userState.handlePasswordChange(user)}
-          error={userState.error}
+          onConfirm={()=>userStore.handlePasswordChange(user)}
+          error={userStore.error}
           menuItemText="Сменить пароль пользователю"
-          loading={userState.loading}
+          loading={userStore.loading}
           description="Введите новый пароль и подтверждение пароля"
           title={`Смена пароля для ${user.userName}`}
         >

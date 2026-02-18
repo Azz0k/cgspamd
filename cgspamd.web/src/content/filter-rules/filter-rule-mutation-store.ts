@@ -2,13 +2,14 @@ import {makeAutoObservable} from "mobx";
 import type {ChangeEvent} from "react";
 import {filterRuleTypes} from "@/content/filter-rules/components/filter-rule-types.ts";
 
+
 export type DraftFilterRule = {
   value: string;
   comment: string;
   type: number;
 };
 
-const defaultDraftFilterRule = {
+export const defaultDraftFilterRule = {
   value: "",
   comment: "",
   type: 0,
@@ -23,6 +24,9 @@ class FilterRuleMutationStore  {
 
   get TypeValue(){
     return filterRuleTypes[this.draft.type];
+  }
+  createNewDraft =(rule:DraftFilterRule)=>{
+    this.draft = rule;
   }
   clear = (): void => {
     this.error = null;

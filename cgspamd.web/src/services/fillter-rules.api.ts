@@ -14,10 +14,13 @@ export const updateRule = async (body:string)=>{
   if (res.status !== 200) {
     throw res.status;
   }
+  return res.json();
 };
 export const deleteRule = async (id:number)=>{
   const res = await DeleteData(`${filterRulesApiUrl}/${id}`);
-  return res.status;
+  if (res.status !== 204) {
+    throw res.status;
+  }
 }
 export const loadAllRules = async () => {
   return await queryClient.fetchQuery({

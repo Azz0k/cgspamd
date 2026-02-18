@@ -8,13 +8,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {filterRuleTypes} from "@/content/filter-rules/components/filter-rule-types.ts";
+import {filterRuleStore} from "@/content/filter-rules/filter-rule-store.ts";
 
 export const FilterRuleTypeDialog = observer(() => {
   const values = filterRuleTypes.map(element=>
-    <SelectItem value={element} >{element}</SelectItem>
+    <SelectItem value={element}>{element}</SelectItem>
   )
   return (
-    <Select>
+    <Select
+      value={filterRuleStore.filterRulesMutationStore.TypeValue}
+      onValueChange={filterRuleStore.filterRulesMutationStore.handleDraftChangeType}
+    >
       <SelectTrigger className="w-full">
         <SelectValue placeholder="Выберите тип" />
       </SelectTrigger>

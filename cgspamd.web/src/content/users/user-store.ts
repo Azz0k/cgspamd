@@ -139,11 +139,11 @@ class UserStore {
       return false;
     }
     catch(error:unknown){
-      console.log(error);
       switch (error){
         case 403:
         case 401:
           this.usersData = [];
+          this.error = null;
           rootStore.handleLogout();
           break;
         default:

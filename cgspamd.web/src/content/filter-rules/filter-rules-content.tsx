@@ -5,6 +5,7 @@ import {rootStore} from "@/store/root-store.ts";
 import {filterRuleStore} from "@/content/filter-rules/filter-rule-store.ts";
 import {DataTable} from "@/components/data-table.tsx";
 import {filterRuleColumns} from "@/content/filter-rules/filter-rules-columns.tsx";
+import {FilterRuleGlobalActions} from "@/content/filter-rules/components/filter-rule-global-actions.tsx";
 
 export const FilterRulesContent = observer(() => {
   useEffect(()=>{
@@ -20,7 +21,11 @@ export const FilterRulesContent = observer(() => {
   },[]);
   return (
     <section className="container mx-auto py-10">
+
       <DataTable columns={filterRuleColumns} data={filterRuleStore.filterRulesData}/>
+      <div className="absolute top-4 left-5">
+        <FilterRuleGlobalActions />
+      </div>
     </section>
   );
 })

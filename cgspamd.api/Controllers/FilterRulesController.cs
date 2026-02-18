@@ -24,16 +24,25 @@ namespace cgspamd.api.Controllers
         }
         // POST api/FilterRules
         [HttpPost]
-        public async Task<int> Post([FromBody] AddFilterRuleRequest request)
+        public async Task<IActionResult> Post([FromBody] AddFilterRuleRequest request)
         {
-            return await application.AddAsync(GetId(HttpContext), request);
+            (int code, FilterRuleDTO? rule) = await application.AddAsync(GetId(HttpContext), request);
+            if (rule == null) 
+            {
+                return StatusCode(code);
+            }
+            return Created("",rule);
         }
         // PUT api/FilterRules
         [HttpPut]
-        public async Task<StatusCodeResult> Put([FromBody] UpdateFilterRuleRequest request)
+        public async Task<IActionResult> Put([FromBody] UpdateFilterRuleRequest request)
         {
-            int code = await application.UpdateAsync(GetId(HttpContext), request);
-            return StatusCode(code);
+            (int code, FilterRuleDTO? rule) = await application.UpdateAsync(GetId(HttpContext), request);
+            if (rule == null)
+            {
+                return StatusCode(code); 
+            }
+            return Ok(rule);
         }
         // DELETE api/FilterRules/5
         [HttpDelete("{id}")]

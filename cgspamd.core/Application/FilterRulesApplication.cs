@@ -31,21 +31,21 @@ namespace cgspamd.core.Application
                 UpdatedByUserName = x.UpdatedByUser == null ? null : x.UpdatedByUser.UserName
             }).ToListAsync();
         }
-        public async Task<int> AddAsync(int userId, AddFilterRuleRequest request)
+        public async Task<(int, FilterRuleDTO?)> AddAsync(int userId, AddFilterRuleRequest request)
         {
             if (!isAddRuleRequestValid(request))
             {
-                return -1;
+                return (400, null);
             }
             FilterRule? existingRule = await db.FilterRules.FirstOrDefaultAsync(rule => rule.Value == request.Value && rule.Type == request.Type);
             if (existingRule != null)
             {
-                return existingRule.Id;
+                return (409, null);
             }
             User? user = await db.Users.FindAsync(userId);
             if (user == null)
             {
-                return -1;
+                return (403, null);
             }
             FilterRule newRule = new() 
             {
@@ -58,24 +58,24 @@ namespace cgspamd.core.Application
             };
             await db.FilterRules.AddAsync(newRule);
             await db.SaveChangesAsync();
-            return newRule.Id;
+            return (201, (FilterRuleDTO) newRule);
         }
-        public async Task<int> UpdateAsync(int userId, UpdateFilterRuleRequest request)
+        public async Task<(int,FilterRuleDTO?)> UpdateAsync(int userId, UpdateFilterRuleRequest request)
         {
 
             if (!isUpdateRuleRequestValid(request))
             {
-                return 400;
+                return (400, null);
             }
             FilterRule? existingRule = await db.FilterRules.FindAsync(request.Id);
             if (existingRule == null)
             {
-                return 404;
+                return (404,null);
             }
             User? user = await db.Users.FindAsync(userId);
             if (user == null)
             {
-                return 400;
+                return (403, null);
             }
             existingRule.Value = request.Value;
             existingRule.Comment = request.Comment;
@@ -83,7 +83,7 @@ namespace cgspamd.core.Application
             existingRule.UpdatedByUserId = user.Id;
             existingRule.UpdatedAt = GenerateNowDate();
             await db.SaveChangesAsync();
-            return 200;
+            return (200, (FilterRuleDTO) existingRule);
         }
         public  async Task<int> DeleteAsync(int id) 
         {

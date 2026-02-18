@@ -4,10 +4,10 @@ const filterRulesApiUrl = import.meta.env.VITE_FILTER_RULES_API_URL;
 
 export const addRule = async (body:string)=>{
   const res = await AddData(filterRulesApiUrl, body);
-  if (res.status !== 200) {
+  if (res.status !== 201) {
     throw res.status;
   }
-  return res.text();
+  return res.json();
 }
 export const updateRule = async (body:string)=>{
   const res = await UpdateData(filterRulesApiUrl, body);

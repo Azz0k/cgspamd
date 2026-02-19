@@ -25,6 +25,7 @@ class FilterRuleStore {
     this.error = null;
   }
   handleImportRules = async ()=>{
+    this.loading = true;
     const rules = this.filterRulesMutationStore.importArea.split('\n');
     const promises:  Promise<unknown>[] = [];
     rules.forEach(line => {
@@ -44,6 +45,7 @@ class FilterRuleStore {
       }))
     });
     await Promise.all(promises);
+    this.loading = false;
     return true;
   }
   handleAddRule = async () => {

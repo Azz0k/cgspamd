@@ -21,8 +21,10 @@ export const FilterRulesContent = observer(() => {
   },[]);
   return (
     <section className="container mx-auto py-10">
-
-      <DataTable columns={filterRuleColumns} data={filterRuleStore.filterRulesData}/>
+      <DataTable
+        columns={filterRuleColumns}
+        data={filterRuleStore.filterRulesData}
+      />
       <div className="absolute top-4 left-5">
         <FilterRuleGlobalActions />
       </div>

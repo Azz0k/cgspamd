@@ -27,8 +27,8 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<TData, TValue>({
-                                           columns,
-                                           data,
+  columns,
+  data,
    }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -39,7 +39,7 @@ export function DataTable<TData, TValue>({
     initialState: {
       pagination: {
         pageIndex: 0,
-        pageSize: 15,
+        pageSize: 14,
       },
     },
     getCoreRowModel: getCoreRowModel(),
@@ -49,7 +49,7 @@ export function DataTable<TData, TValue>({
     state: {
       columnFilters,
     },
-  });
+    });
   useEffect(() => {
     return   reaction(
       ()=>rootStore.searchValue,
@@ -73,9 +73,16 @@ export function DataTable<TData, TValue>({
                     <TableHead key={header.id} className={header.column.columnDef.meta?.headerClassName}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
+                        : (
+                          <>
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {
+                              header.column.columnDef.meta?.Filter
+                            }
+                          </>
                         )}
                     </TableHead>
                   )

@@ -1,7 +1,8 @@
 import '@tanstack/react-table';
-import {type ColumnDef} from "@tanstack/react-table";
+import {type ColumnDef } from "@tanstack/react-table";
 import {FilterRuleActions} from "@/content/filter-rules/components/filter-rule-actions.tsx";
 import {filterRuleTypes} from "@/content/filter-rules/components/filter-rule-types.ts";
+import { TypeHeader} from "@/content/filter-rules/components/TypeHeader.tsx";
 
 export type FilterRule = {
   id: number;
@@ -13,7 +14,6 @@ export type FilterRule = {
   createdByUserName:string;
   updatedByUserName?:string;
 };
-
 
 export const filterRuleColumns:ColumnDef<FilterRule>[] = [
   {
@@ -27,8 +27,12 @@ export const filterRuleColumns:ColumnDef<FilterRule>[] = [
     meta: {headerClassName: "w-2/10", },
   },
   {
-    header: "Тип",
-    meta: {headerClassName: "w-1/10", },
+    header: ({table})=><TypeHeader table={table}/>,
+    id: "type",
+    accessorKey: "type",
+    meta: {
+      headerClassName: "w-1/10",
+    },
     cell: ({ row }) => {
       const filterRule = row.original;
       return (
@@ -36,6 +40,13 @@ export const filterRuleColumns:ColumnDef<FilterRule>[] = [
           {filterRuleTypes[filterRule.type]}
         </span>
       )
+    },
+    enableColumnFilter: true,
+    filterFn: (row, id, value) =>{
+      if (id==="type"){
+        return row.original.type === value
+      }
+      return false
     }
   },
   {

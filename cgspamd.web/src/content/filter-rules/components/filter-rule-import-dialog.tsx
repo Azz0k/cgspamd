@@ -10,6 +10,7 @@ import {
     HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { CircleQuestionMarkIcon } from "lucide-react";
+import {ScrollArea} from "@/components/ui/scroll-area.tsx";
 
 export const FilterRuleImportDialog = observer(()=>{
   return (
@@ -32,11 +33,14 @@ export const FilterRuleImportDialog = observer(()=>{
           </HoverCardContent>
         </HoverCard>
         <Label htmlFor="importarea"></Label>
-        <Textarea
-          id="importarea"
-          value={filterRuleStore.filterRulesMutationStore.importArea}
-          onChange={filterRuleStore.filterRulesMutationStore.handleImportAreaChange}
-        />
+        <ScrollArea className="h-72 rounded-md">
+          <Textarea
+            className="h-72 resize-none rounded-md"
+            id="importarea"
+            value={filterRuleStore.filterRulesMutationStore.importArea}
+            onChange={filterRuleStore.filterRulesMutationStore.handleImportAreaChange}
+          />
+        </ScrollArea>
       </Field>
     </FieldGroup>
   );

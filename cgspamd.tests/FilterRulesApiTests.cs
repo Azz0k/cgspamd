@@ -53,13 +53,15 @@ namespace cgspamd.tests
         {
             return Guid.NewGuid().ToString();
         }
-        private async Task<string?> PostToFilterRulesAPI()
+
+        private async Task<HttpResponseMessage?> PostToFilterRulesAPI(string value, string comment, int type)
         {
-            AddFilterRuleRequest request = new() { Value = GenerateRandomStr(), Comment = GenerateRandomStr(), Type = 0};
-            var response = await _client.PostAsJsonAsync(apiUri, request);
-            response.EnsureSuccessStatusCode();
-            string? addedData = await response.Content.ReadAsStringAsync();
-            return addedData;
+            AddFilterRuleRequest request = new() { Value = value, Comment = comment, Type = type };
+            return await _client.PostAsJsonAsync(apiUri, request);
+        }
+        private async Task<HttpResponseMessage?> PostToFilterRulesAPI()
+        {
+            return await PostToFilterRulesAPI(GenerateRandomStr(), GenerateRandomStr(), 0);
         }
         private async Task<List<FilterRuleDTO>?> GetAsync()
         {
@@ -70,38 +72,49 @@ namespace cgspamd.tests
         [Fact]
         public async Task FilterRulesApi_POST_ShouldWorkCorrectly()
         {
-            string? createdId = await PostToFilterRulesAPI();
-            Assert.NotNull(createdId);
-            Assert.NotEmpty(createdId);
-            int id = Int32.Parse(createdId);
-            Assert.NotEqual(-1, id);
+            string value = GenerateRandomStr();
+            string comment = GenerateRandomStr();
+            var response = await PostToFilterRulesAPI(value, comment, 0); 
+            Assert.NotNull(response);
+            response.EnsureSuccessStatusCode();
+            FilterRuleDTO? data = await response.Content.ReadFromJsonAsync<FilterRuleDTO>();
+            Assert.NotNull(data);
+            response = await PostToFilterRulesAPI(value, comment, 0);
+            Assert.NotNull(response);
+            var code = response.StatusCode;
+            Assert.Equal(HttpStatusCode.Conflict, code);
+            response = await PostToFilterRulesAPI(GenerateRandomStr(), GenerateRandomStr(), -1);
+            Assert.NotNull(response);
+            code = response.StatusCode;
+            Assert.Equal(HttpStatusCode.BadRequest, code);
+
         }
 
         [Fact]
         public async Task FilterRulesApi_GET_ShouldWorkCorrectly()
         {
-            string? response = await PostToFilterRulesAPI();
+            var response = await PostToFilterRulesAPI();
             Assert.NotNull(response);
-            int id = Int32.Parse(response);
+            var data = response.Content.ReadFromJsonAsync<FilterRuleDTO>();
             List<FilterRuleDTO>? getResponse = await GetAsync();
             Assert.NotNull(getResponse);
             Assert.NotEmpty(getResponse);
-            Assert.Contains(getResponse, e => e.Id == id);
+            Assert.Contains(getResponse, e => e.Id == data.Id);
         }
         [Fact]
         public async Task FilterRulsApi_DELETE_ShouldWorkCorrectly()
         {
-            string? createdId = await PostToFilterRulesAPI();
-            Assert.NotNull(createdId);
-            int idToDelete = int.Parse(createdId);
-            var response = await _client.DeleteAsync($"{apiUri}/{idToDelete}");
+            var response = await PostToFilterRulesAPI();
+            Assert.NotNull(response);
+            var data = response.Content.ReadFromJsonAsync<FilterRuleDTO>();
+            response = await _client.DeleteAsync($"{apiUri}/{data.Id}");
             response.EnsureSuccessStatusCode();
-            response = await _client.DeleteAsync($"{apiUri}/{idToDelete}");
+            response = await _client.DeleteAsync($"{apiUri}/{data.Id}");
             var code = response.StatusCode;
             Assert.Equal(HttpStatusCode.NotFound, code);
             var rulesAfterDelete = await GetAsync();
             Assert.NotNull(rulesAfterDelete);
-            Assert.DoesNotContain(rulesAfterDelete, e => e.Id == idToDelete);
+            Assert.DoesNotContain(rulesAfterDelete, e => e.Id == data.Id);
         }
         [Fact]
         public async Task UsersApi_PUT_ShouldWorkCorrectly()

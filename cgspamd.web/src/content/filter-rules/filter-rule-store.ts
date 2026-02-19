@@ -24,6 +24,28 @@ class FilterRuleStore {
     this.filterRulesMutationStore.clear();
     this.error = null;
   }
+  handleImportRules = async ()=>{
+    const rules = this.filterRulesMutationStore.importArea.split('\n');
+    const promises:  Promise<unknown>[] = [];
+    rules.forEach(line => {
+      let comment = "Импортировано";
+      let value = line.trim();
+      if (line.includes("#")){
+        const splitLine = line.split("#");
+        value = splitLine[0].trim();
+        comment = splitLine[1].trim();
+      }
+      promises.push(new Promise((resolve) => {
+        this.AddFilterRule({
+          value,
+          comment,
+          type: this.filterRulesMutationStore.draft.type
+        }).then(() => resolve(0));
+      }))
+    });
+    await Promise.all(promises);
+    return true;
+  }
   handleAddRule = async () => {
     this.error = null;
     if (!this.filterRulesMutationStore.validate()){

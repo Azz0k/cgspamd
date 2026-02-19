@@ -21,6 +21,7 @@ class FilterRuleMutationStore  {
   }
   error: string | null = null;
   draft:DraftFilterRule = defaultDraftFilterRule;
+  importArea:string = "";
 
   get TypeValue(){
     return filterRuleTypes[this.draft.type];
@@ -31,6 +32,7 @@ class FilterRuleMutationStore  {
   clear = (): void => {
     this.error = null;
     this.draft = defaultDraftFilterRule;
+    this.importArea = "";
   };
   validate = (): boolean => {
     this.draft.value = this.draft.value.trim();
@@ -39,6 +41,9 @@ class FilterRuleMutationStore  {
       return false;
     }
     return true;
+  }
+  handleImportAreaChange = (event: ChangeEvent<HTMLTextAreaElement>): void => {
+    this.importArea = event.target.value;
   }
   handleDraftChangeValue = (event: ChangeEvent<HTMLInputElement>)=>{
     this.draft.value = event.target.value;

@@ -37,12 +37,12 @@ export const ActionConfirmationDialog = ({
   const [open, setOpen] = React.useState(false);
   const errorTitle = "Ошибка";
   const handleOpenChange = (value:boolean) => {
-
     setOpen(value);
     if (!value) onCancel();
   }
   const handleSubmit = () =>{
     onConfirm().then(result => {
+      console.log(result);
       if (result) {
         setOpen(false);
         onCancel();

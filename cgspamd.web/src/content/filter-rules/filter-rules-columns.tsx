@@ -53,6 +53,14 @@ export const filterRuleColumns:ColumnDef<FilterRule>[] = [
     accessorKey: "createdAt",
     header: "Когда создано",
     meta: {headerClassName: "w-1/10", },
+    cell: ({ row }) => {
+      const date = row.original.createdAt.split("-").reverse().join(".");
+      return (
+        <span>
+          {date}
+        </span>
+      )
+    },
   },
   {
     accessorKey: "createdByUserName",
@@ -63,13 +71,21 @@ export const filterRuleColumns:ColumnDef<FilterRule>[] = [
     accessorKey: "updatedAt",
     header: "Когда изменено",
     meta: {headerClassName: "w-1/10", },
+    cell: ({ row }) => {
+      if (!row.original.updatedAt) return "";
+      const date = row.original.updatedAt.split("-").reverse().join(".");
+      return (
+        <span>
+          {date}
+        </span>
+      )
+    },
   },
   {
     accessorKey: "updatedByUserName",
     header: "Кем изменено",
     meta: {headerClassName: "w-1/10", },
   },
-
   {
     id: "actions",
     header: "Действия",

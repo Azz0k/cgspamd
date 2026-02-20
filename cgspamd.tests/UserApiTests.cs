@@ -1,6 +1,6 @@
 ﻿using cgspamd.api;
 using cgspamd.api.Application;
-using cgspamd.core.Context;
+using cgspamd.core.Contexts;
 using cgspamd.core.Models.APIModels;
 using cgspamd.core.Services;
 using Microsoft.AspNetCore.Mvc.Testing;

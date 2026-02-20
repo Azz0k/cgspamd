@@ -1,4 +1,4 @@
-﻿using cgspamd.core.Application;
+﻿using cgspamd.core.Applications;
 using cgspamd.core.Models;
 using cgspamd.core.Models.APIModels;
 using Microsoft.AspNetCore.Authorization;

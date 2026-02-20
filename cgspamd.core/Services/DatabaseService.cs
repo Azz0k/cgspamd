@@ -1,4 +1,4 @@
-﻿using cgspamd.core.Context;
+﻿using cgspamd.core.Contexts;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

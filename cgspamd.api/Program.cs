@@ -1,7 +1,7 @@
 using cgspamd.api.Application;
 using cgspamd.api.Models;
-using cgspamd.core.Application;
-using cgspamd.core.Context;
+using cgspamd.core.Applications;
+using cgspamd.core.Contexts;
 using cgspamd.core.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +20,7 @@ namespace cgspamd.api
             var settignsBuilder = new ConfigurationBuilder().AddJsonFile($"appsettings.json");
             IConfiguration config = settignsBuilder.Build();
             string? allowedOrigins = config.GetSection("AllowedOrigins").Get<string>();
-            string? connectionString = config.GetSection("ConnectionString").Get<string>() ?? defaultConnectionString;
+            string connectionString = config.GetSection("ConnectionString").Get<string>() ?? defaultConnectionString;
             string secretCode = config.GetSection("JWTSecretCode").Get<string>() ?? Guid.NewGuid().ToString();
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddSpaStaticFiles(conf =>

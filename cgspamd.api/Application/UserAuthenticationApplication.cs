@@ -1,5 +1,5 @@
 ﻿using cgspamd.api.Models;
-using cgspamd.core.Context;
+using cgspamd.core.Contexts;
 using cgspamd.core.Models;
 using cgspamd.core.Models.APIModels;
 using Microsoft.AspNetCore.Identity.Data;

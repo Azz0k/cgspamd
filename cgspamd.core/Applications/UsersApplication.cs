@@ -1,4 +1,4 @@
-﻿using cgspamd.core.Context;
+﻿using cgspamd.core.Contexts;
 using cgspamd.core.Models;
 using cgspamd.core.Models.APIModels;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +9,7 @@ using System.Data;
 using System.Text;
 using static cgspamd.core.Utils.Utils;
 
-namespace cgspamd.core.Application
+namespace cgspamd.core.Applications
 {
     public class UsersApplication
     {

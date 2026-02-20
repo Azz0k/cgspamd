@@ -1,18 +1,20 @@
-﻿using cgspamd.core.Context;
+﻿using cgspamd.core.Contexts;
+using cgspamd.core.Enums;
 using cgspamd.core.Models;
 using cgspamd.core.Models.APIModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using static cgspamd.core.Utils.Utils;
 
-namespace cgspamd.core.Application
+namespace cgspamd.core.Applications
 {
     public class FilterRulesApplication
     {
         private StoreDbContext db;
-        public FilterRulesApplication(StoreDbContext storeDbContext) 
+        public FilterRulesApplication(StoreDbContext storeDbContext)
         {
             db = storeDbContext;
         }
@@ -47,7 +49,7 @@ namespace cgspamd.core.Application
             {
                 return (403, null);
             }
-            FilterRule newRule = new() 
+            FilterRule newRule = new()
             {
                 Value = request.Value,
                 Comment = request.Comment,
@@ -58,9 +60,9 @@ namespace cgspamd.core.Application
             };
             await db.FilterRules.AddAsync(newRule);
             await db.SaveChangesAsync();
-            return (201, (FilterRuleDTO) newRule);
+            return (201, (FilterRuleDTO)newRule);
         }
-        public async Task<(int,FilterRuleDTO?)> UpdateAsync(int userId, UpdateFilterRuleRequest request)
+        public async Task<(int, FilterRuleDTO?)> UpdateAsync(int userId, UpdateFilterRuleRequest request)
         {
 
             if (!isUpdateRuleRequestValid(request))
@@ -70,7 +72,7 @@ namespace cgspamd.core.Application
             FilterRule? existingRule = await db.FilterRules.FindAsync(request.Id);
             if (existingRule == null)
             {
-                return (404,null);
+                return (404, null);
             }
             User? user = await db.Users.FindAsync(userId);
             if (user == null)
@@ -83,9 +85,9 @@ namespace cgspamd.core.Application
             existingRule.UpdatedByUserId = user.Id;
             existingRule.UpdatedAt = GenerateNowDate();
             await db.SaveChangesAsync();
-            return (200, (FilterRuleDTO) existingRule);
+            return (200, (FilterRuleDTO)existingRule);
         }
-        public  async Task<int> DeleteAsync(int id) 
+        public async Task<int> DeleteAsync(int id)
         {
             if (id <= 0) return 400;
             FilterRule? rule = await db.FilterRules.FindAsync(id);
@@ -93,6 +95,69 @@ namespace cgspamd.core.Application
             db.FilterRules.Remove(rule);
             await db.SaveChangesAsync();
             return 204;
+        }
+        public async Task<bool> IsEmailExcludedAsync(string? email)
+        {
+            if (email == null) return false;
+            FilterRule? filterRule = await db.FilterRules.FirstOrDefaultAsync(rule => rule.Type == (int)FilterRulesType.excludedRecipients && rule.Value == email);
+            return filterRule != null;
+        }
+        
+        public async Task<bool> IsDomainListedAsync(string domain, FilterRulesType type)
+        {
+            var domainList = db.FilterRules.Where(r=>r.Type == (int)type).Select<FilterRule,string>(r=>r.Value);
+            foreach (string d in domainList)
+            {
+                if (d.IndexOf('*') == -1)
+                {
+                    if (domain.EndsWith(d))
+                    {
+                        return true;
+                    }
+                    continue;
+                }
+                if (IsEqualWithWildcard(domain, d))
+                {
+                    return true; 
+                }
+            }
+            return false;
+        }
+        public async Task<bool> IsEmailListedAsync(string email, FilterRulesType type)
+        {
+            FilterRule? rule = await db.FilterRules.FirstOrDefaultAsync(rule => rule.Type == (int)type && rule.Value == email);
+            return rule != null;
+        }
+        public async Task<bool> ContainProhibitedTextAsync(string text)
+        {
+            if (text == "")
+            {
+                return false;
+            }
+            var stringList = db.FilterRules.Where(r=>r.Type == (int)FilterRulesType.prohibitedTextInBody).Select(r=>r.Value);
+            foreach (string s in stringList)
+            {
+                if (text.Contains(s))
+                    return true;
+            }
+            return false;
+        }
+        public async Task<bool> ContainProhibitedRegexAsync(string text)
+        {
+            if (text == "")
+            {
+                return false;
+            }
+            var stringList = db.FilterRules.Where(r => r.Type == (int)FilterRulesType.prohibitedRegExInBody).Select(r => r.Value);
+            foreach (string s in stringList)
+            {
+                Regex regex = new(s, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+                if (regex.IsMatch(text))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace cgspamd.core.Enums
 {
-    enum FilterRulesType
+    public enum FilterRulesType
     {
         whiteListSenderDomains,
         whiteListSenderAddresses,

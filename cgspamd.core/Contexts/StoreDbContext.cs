@@ -4,7 +4,7 @@ using System.Text;
 using cgspamd.core.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace cgspamd.core.Context
+namespace cgspamd.core.Contexts
 {
     public class StoreDbContext : DbContext
     {

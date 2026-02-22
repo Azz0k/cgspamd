@@ -7,7 +7,10 @@ using cgspamd.helper.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.CompilerServices;
 using static cgspamd.core.Utils.Utils;
+
+[assembly: InternalsVisibleTo("cgspamd.tests")]
 namespace cgspamd.helper
 {
     internal class Program

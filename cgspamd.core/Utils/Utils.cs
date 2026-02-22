@@ -37,20 +37,24 @@ namespace cgspamd.core.Utils
         }
         public static bool isAddRuleRequestValid(AddFilterRuleRequest request)
         {
+            if (request.Value.Trim().Length == 0) return false;
             return Enum.IsDefined(typeof(FilterRulesType), request.Type);
         }
         public static bool isUpdateRuleRequestValid(UpdateFilterRuleRequest request)
         {
             if (request.Id <= 0) return false;
+            if (request.Value.Trim().Length == 0) return false;
             return true;
         }
         public static bool isEmailValid(string? email)
         {
             if (email == null) return false;
             if (email.Length == 0)   return false;
-            if (email.IndexOf('@') == -1) return false;
+            if (email.Where(c=>c=='@').Count() != 1) return false;
             if (email.IndexOf('.') == -1) return false;
-            return true;
+            string pattern = @"^.+@.+\..+$";
+            var match = Regex.Match(email, pattern, RegexOptions.IgnoreCase);
+            return match.Success;
         }
         public static string GenerateNowDate()
         {

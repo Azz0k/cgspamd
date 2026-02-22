@@ -96,10 +96,12 @@ namespace cgspamd.tests
             var response = await PostToFilterRulesAPI();
             Assert.NotNull(response);
             var data = response.Content.ReadFromJsonAsync<FilterRuleDTO>();
+            Assert.NotNull(data);
+            Assert.NotNull(data?.Result);
             List<FilterRuleDTO>? getResponse = await GetAsync();
             Assert.NotNull(getResponse);
             Assert.NotEmpty(getResponse);
-            Assert.Contains(getResponse, e => e.Id == data.Id);
+            Assert.Contains(getResponse, e => e.Id == data.Result.Id);
         }
         [Fact]
         public async Task FilterRulsApi_DELETE_ShouldWorkCorrectly()
@@ -107,14 +109,16 @@ namespace cgspamd.tests
             var response = await PostToFilterRulesAPI();
             Assert.NotNull(response);
             var data = response.Content.ReadFromJsonAsync<FilterRuleDTO>();
-            response = await _client.DeleteAsync($"{apiUri}/{data.Id}");
+            Assert.NotNull(data);
+            Assert.NotNull(data?.Result);
+            response = await _client.DeleteAsync($"{apiUri}/{data?.Result.Id}");
             response.EnsureSuccessStatusCode();
-            response = await _client.DeleteAsync($"{apiUri}/{data.Id}");
+            response = await _client.DeleteAsync($"{apiUri}/{data?.Result.Id}");
             var code = response.StatusCode;
             Assert.Equal(HttpStatusCode.NotFound, code);
             var rulesAfterDelete = await GetAsync();
             Assert.NotNull(rulesAfterDelete);
-            Assert.DoesNotContain(rulesAfterDelete, e => e.Id == data.Id);
+            Assert.DoesNotContain(rulesAfterDelete, e => e.Id == data?.Result.Id);
         }
         [Fact]
         public async Task UsersApi_PUT_ShouldWorkCorrectly()

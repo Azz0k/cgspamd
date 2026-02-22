@@ -105,7 +105,8 @@ namespace cgspamd.core.Applications
         
         public async Task<bool> IsDomainListedAsync(string domain, FilterRulesType type)
         {
-            var domainList = db.FilterRules.Where(r=>r.Type == (int)type).Select<FilterRule,string>(r=>r.Value);
+            domain = domain.ToLower();
+            var domainList = db.FilterRules.Where(r=>r.Type == (int)type).Select<FilterRule,string>(r=>r.Value.ToLower());
             foreach (string d in domainList)
             {
                 if (d.IndexOf('*') == -1)
@@ -134,7 +135,8 @@ namespace cgspamd.core.Applications
             {
                 return false;
             }
-            var stringList = db.FilterRules.Where(r=>r.Type == (int)FilterRulesType.prohibitedTextInBody).Select(r=>r.Value);
+            text = text.ToLower();
+            var stringList = db.FilterRules.Where(r=>r.Type == (int)FilterRulesType.prohibitedTextInBody).Select(r=>r.Value.ToLower());
             foreach (string s in stringList)
             {
                 if (text.Contains(s))

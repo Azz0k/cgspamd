@@ -8,6 +8,7 @@ using System.Formats.Asn1;
 using System.Text;
 using static cgspamd.core.Utils.Utils;
 
+
 namespace cgspamd.helper.Applications
 {
     internal class HelperApplication
@@ -41,7 +42,7 @@ namespace cgspamd.helper.Applications
                     {
                         _console.PrintGoodMessage(lineNumber);
                         _console.PrintLogMessage("Error: wrong INTF format!");
-                        return;
+                        break;
                     }
                     string fileName = messageParts[2];
                     var file = Path.Combine(appSettings.baseDir, fileName);
@@ -60,7 +61,7 @@ namespace cgspamd.helper.Applications
                     break;
             }
         }
-        private async Task<bool> EnsureMessageAllowed(string file)
+        internal async Task<bool> EnsureMessageAllowed(string file)
         {
             if (!EnsureFileExists(file)) return true;
             try
@@ -68,19 +69,39 @@ namespace cgspamd.helper.Applications
                 using FileStream fs = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read);
                 using var br = new BinaryReader(fs, Encoding.ASCII, leaveOpen: true);
                 string? line = null;
+                EmailFields? emailFields = null;
                 while ((line = ReadAsciiLine(br)) != null)
                 {
                     if (line == "") break;
-                    if (await app.IsEmailExcludedAsync(GetRecipient(line)))
+                    string? sender = GetSender(line);
+                    if (sender != null)
+                    {
+                        emailFields = new(sender);
+                    }
+                    string? recipient = GetRecipient(line);
+                    if (recipient != null)
+                    {
+                        if (emailFields != null)
+                        {
+                            emailFields.To.Add(recipient);
+                        }
+                    }
+                }
+                if (emailFields == null)
+                {
+                    return true;
+                }
+                foreach (var email in emailFields.To)
+                {
+                    if (await app.IsEmailExcludedAsync(email))
                     {
                         return true;
                     }
-                    string? sender = GetSender(line);
-                    bool? status = await GetEmailListStatusAsync(sender);
-                    if (status.HasValue)
-                    {
-                        return status.Value;
-                    }
+                }
+                bool? status = await GetEmailListStatusAsync(emailFields.From);
+                if (status.HasValue)
+                {
+                    return status.Value;
                 }
                 var eml = MsgReader.Mime.Message.Load(fs);
                 string textBody = "";
@@ -109,11 +130,11 @@ namespace cgspamd.helper.Applications
             string domain = GetDomaInEmail(email!);
             var whiteListAddress = app.IsEmailListedAsync(email!, FilterRulesType.whiteListSenderAddresses);
             var whiteListDomains = app.IsDomainListedAsync(domain, FilterRulesType.whiteListSenderDomains);
-            var blackListAddress = app.IsEmailListedAsync(email!, FilterRulesType.whiteListSenderAddresses);
-            var blackListDomains = app.IsDomainListedAsync(domain, FilterRulesType.whiteListSenderDomains);
+            var blackListAddress = app.IsEmailListedAsync(email!, FilterRulesType.blackListSenderAddresses);
+            var blackListDomains = app.IsDomainListedAsync(domain, FilterRulesType.blackListSenderDomains);
             await Task.WhenAll(whiteListAddress, whiteListDomains, blackListAddress, blackListDomains);
             bool white = whiteListAddress.Result || whiteListDomains.Result;
-            bool black = whiteListAddress.Result || whiteListDomains.Result;
+            bool black = blackListAddress.Result || blackListDomains.Result;
             if (white) return true;
             if (black) return false;
             return null;
